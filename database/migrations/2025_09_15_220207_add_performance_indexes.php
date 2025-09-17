@@ -105,11 +105,8 @@ return new class extends Migration
             // CRITICAL: Index for failed jobs analysis
             $table->index('failed_at', 'idx_failed_jobs_failed_at');
             
-            // CRITICAL: Index for queue analysis
-            $table->index('queue', 'idx_failed_jobs_queue');
-            
-            // CRITICAL: Composite index for queue + failed_at analysis
-            $table->index(['queue', 'failed_at'], 'idx_failed_jobs_queue_failed');
+            // Note: queue column is TEXT type, cannot create index due to MySQL key length limit
+            // Individual failed_at index is sufficient for most queries
         });
     }
 
@@ -166,8 +163,6 @@ return new class extends Migration
         // Drop indexes from failed_jobs table
         Schema::table('failed_jobs', function (Blueprint $table) {
             $table->dropIndex('idx_failed_jobs_failed_at');
-            $table->dropIndex('idx_failed_jobs_queue');
-            $table->dropIndex('idx_failed_jobs_queue_failed');
         });
     }
 };
