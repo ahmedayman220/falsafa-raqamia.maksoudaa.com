@@ -219,15 +219,15 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="text-center">
                             <div class="video-container">
-                                <h3 class="text-xl font-semibold text-red-800 mb-2">🎥 Demo Video v1</h3>
-                                <p class="text-red-700 mb-4">System Overview & Basic Functionality</p>
+                                <h3 class="text-xl font-semibold text-red-800 mb-2">🎥 Discussion Video</h3>
+                                <p class="text-red-700 mb-4">System Overview & Discussion</p>
                                 <video controls class="w-full max-w-md mx-auto mb-4">
                                     <source src="/falsafa-raqamia-v1.webm" type="video/webm">
                                     Your browser does not support the video tag.
                                 </video>
                                 <div class="space-y-2">
-                                    <a href="/falsafa-raqamia-v1.webm" download="falsafa-raqamia-demo-v1.webm" class="inline-block bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition">
-                                        📥 Download Video v1
+                                    <a href="/falsafa-raqamia-v1.webm" download="falsafa-raqamia-discussion.webm" class="inline-block bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition">
+                                        📥 Download Discussion Video
                                     </a>
                                     <p class="text-sm text-gray-600">Duration: ~15 minutes</p>
                                 </div>
@@ -236,15 +236,15 @@
                     
                     <div class="text-center">
                             <div class="video-container">
-                                <h3 class="text-xl font-semibold text-blue-800 mb-2">🎥 Demo Video v2</h3>
-                                <p class="text-blue-700 mb-4">Advanced Features & Performance Testing</p>
+                                <h3 class="text-xl font-semibold text-blue-800 mb-2">🎥 Code Review Video</h3>
+                                <p class="text-blue-700 mb-4">Code Review & Technical Implementation</p>
                                 <video controls class="w-full max-w-md mx-auto mb-4">
                                     <source src="/falsafa-raqamia-v2.webm" type="video/webm">
                                     Your browser does not support the video tag.
                                 </video>
                                 <div class="space-y-2">
-                                    <a href="/falsafa-raqamia-v2.webm" download="falsafa-raqamia-demo-v2.webm" class="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
-                                        📥 Download Video v2
+                                    <a href="/falsafa-raqamia-v2.webm" download="falsafa-raqamia-code-review.webm" class="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+                                        📥 Download Code Review Video
                                     </a>
                                     <p class="text-sm text-gray-600">Duration: ~13 minutes</p>
                                 </div>
