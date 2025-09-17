@@ -14,38 +14,47 @@ class UsersSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = [
-            [
-                'name' => 'John Doe',
-                'email' => 'john.doe@example.com',
-                'password' => Hash::make('password123'),
-            ],
-            [
-                'name' => 'Jane Smith',
-                'email' => 'jane.smith@example.com',
-                'password' => Hash::make('password123'),
-            ],
-            [
-                'name' => 'Mike Johnson',
-                'email' => 'mike.johnson@example.com',
-                'password' => Hash::make('password123'),
-            ],
-            [
-                'name' => 'Sarah Wilson',
-                'email' => 'sarah.wilson@example.com',
-                'password' => Hash::make('password123'),
-            ],
-            [
-                'name' => 'David Brown',
-                'email' => 'david.brown@example.com',
-                'password' => Hash::make('password123'),
-            ],
+        $firstNames = [
+            'John', 'Jane', 'Mike', 'Sarah', 'David', 'Emily', 'Chris', 'Lisa', 'Tom', 'Anna',
+            'Alex', 'Maria', 'James', 'Emma', 'Ryan', 'Sophie', 'Daniel', 'Olivia', 'Mark', 'Grace',
+            'Kevin', 'Rachel', 'Steve', 'Laura', 'Paul', 'Kate', 'Ben', 'Amy', 'Nick', 'Helen',
+            'Sam', 'Julia', 'Rob', 'Nina', 'Tim', 'Eva', 'Matt', 'Claire', 'Luke', 'Maya',
+            'Jake', 'Zoe', 'Adam', 'Lily', 'Josh', 'Ruby', 'Max', 'Chloe', 'Noah', 'Ella'
         ];
 
-        foreach ($users as $userData) {
-            User::create($userData);
+        $lastNames = [
+            'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez',
+            'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin',
+            'Lee', 'Perez', 'Thompson', 'White', 'Harris', 'Sanchez', 'Clark', 'Ramirez', 'Lewis', 'Robinson',
+            'Walker', 'Young', 'Allen', 'King', 'Wright', 'Scott', 'Torres', 'Nguyen', 'Hill', 'Flores',
+            'Green', 'Adams', 'Nelson', 'Baker', 'Hall', 'Rivera', 'Campbell', 'Mitchell', 'Carter', 'Roberts'
+        ];
+
+        $domains = ['example.com', 'test.com', 'demo.org', 'sample.net', 'mock.io'];
+
+        $users = [];
+        
+        // Generate 100 users
+        for ($i = 1; $i <= 100; $i++) {
+            $firstName = $firstNames[array_rand($firstNames)];
+            $lastName = $lastNames[array_rand($lastNames)];
+            $domain = $domains[array_rand($domains)];
+            
+            // Ensure unique emails
+            $email = strtolower($firstName . '.' . $lastName . $i . '@' . $domain);
+            
+            $users[] = [
+                'name' => $firstName . ' ' . $lastName,
+                'email' => $email,
+                'password' => Hash::make('password123'),
+                'created_at' => now()->subDays(rand(1, 365)),
+                'updated_at' => now()->subDays(rand(1, 365)),
+            ];
         }
 
-        $this->command->info('Created ' . count($users) . ' test users');
+        // Insert users in batches for better performance
+        User::insert($users);
+
+        $this->command->info('Created 100 test users');
     }
 }
