@@ -73,8 +73,7 @@ return new class extends Migration
             // Index for created_at for date range queries
             $table->index('created_at', 'idx_webhook_logs_created_at');
             
-            // CRITICAL: Index for processed_at (webhook processing time analysis)
-            $table->index('processed_at', 'idx_webhook_logs_processed_at');
+            // Note: processed_at index will be added in later migration (2025_09_16_220447_enhance_webhook_logs_for_scale.php)
             
             // Composite index for status + created_at (for monitoring)
             $table->index(['status', 'created_at'], 'idx_webhook_logs_status_created');
@@ -138,7 +137,7 @@ return new class extends Migration
             $table->dropIndex('idx_webhook_logs_txn_id');
             $table->dropIndex('idx_webhook_logs_status');
             $table->dropIndex('idx_webhook_logs_created_at');
-            $table->dropIndex('idx_webhook_logs_processed_at');
+            // Note: processed_at index is handled in later migration
             $table->dropIndex('idx_webhook_logs_status_created');
             $table->dropIndex('idx_webhook_logs_order_status');
             $table->dropIndex('idx_webhook_logs_txn_status');
