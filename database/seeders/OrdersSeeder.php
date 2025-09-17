@@ -31,7 +31,8 @@ class OrdersSeeder extends Seeder
 
         $currencies = ['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'JPY', 'CHF', 'SEK', 'NOK', 'DKK'];
         
-        $statuses = ['pending', 'paid', 'failed', 'cancelled', 'refunded'];
+        // Use only the allowed status values from the migration
+        $statuses = ['pending', 'paid', 'failed', 'refunded'];
         
         // Create 1000 orders with various configurations
         for ($i = 1; $i <= 1000; $i++) {
@@ -52,6 +53,10 @@ class OrdersSeeder extends Seeder
             // Generate realistic timestamps (spread over last 6 months)
             $createdAt = now()->subDays(rand(1, 180))->subHours(rand(0, 23))->subMinutes(rand(0, 59));
             $updatedAt = $createdAt->copy()->addMinutes(rand(1, 60));
+            
+            // Ensure timestamps are properly formatted for MySQL
+            $createdAt = $createdAt->format('Y-m-d H:i:s');
+            $updatedAt = $updatedAt->format('Y-m-d H:i:s');
 
             // Generate external transaction ID for some orders (simulating webhook processed orders)
             $externalTxnId = null;
