@@ -1,0 +1,520 @@
+{
+  "info": {
+    "name": "Order Management + Webhooks API",
+    "description": "Complete API collection for the Order Management + Webhooks System by Ahmed Ayman",
+    "version": "2.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "noauth"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "test_order_uuid",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "test_txn_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Webhook Endpoints",
+      "item": [
+        {
+          "name": "Process Payment Webhook",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "User-Agent",
+                "value": "PostmanWebhook/1.0"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"txn_id\": \"{{test_txn_id}}\",\n  \"order_uuid\": \"{{test_order_uuid}}\",\n  \"status\": \"paid\",\n  \"amount\": {{randomAmount}},\n  \"timestamp\": \"{{currentTimestamp}}\",\n  \"webhook_source\": \"stripe\",\n  \"correlation_id\": \"corr_{{timestamp}}\",\n  \"metadata\": {\n    \"payment_method\": \"credit_card\",\n    \"processor\": \"stripe\",\n    \"processor_txn_id\": \"pi_{{randomString}}\",\n    \"card_last4\": \"{{randomCard}}\",\n    \"card_brand\": \"visa\",\n    \"fee\": {{calculatedFee}},\n    \"currency\": \"USD\",\n    \"customer_id\": \"cust_{{randomString}}\",\n    \"billing_address\": {\n      \"country\": \"US\",\n      \"state\": \"CA\",\n      \"city\": \"San Francisco\",\n      \"postal_code\": \"94102\"\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/webhooks/payments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "webhooks", "payments"]
+            },
+            "description": "Process a payment webhook notification with dynamic test data"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"txn_id\": \"tx_stripe_20250916_001\",\n  \"order_uuid\": \"000016c8-3b8b-429c-96d1-1054a3b871cb\",\n  \"status\": \"paid\",\n  \"amount\": 299.99,\n  \"timestamp\": \"2025-09-16T14:30:00Z\",\n  \"metadata\": {\n    \"payment_method\": \"credit_card\",\n    \"processor\": \"stripe\",\n    \"processor_txn_id\": \"pi_3Q1xYz2eZvKYlo2C0abc123\",\n    \"card_last4\": \"4242\",\n    \"card_brand\": \"visa\",\n    \"fee\": 8.70,\n    \"currency\": \"USD\"\n  }\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/webhooks/payments",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "webhooks", "payments"]
+                }
+              },
+              "status": "OK",
+              "code": 202,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"message\": \"Webhook received and queued for processing\",\n  \"webhook_log_id\": 1,\n  \"status\": \"pending\",\n  \"order_uuid\": \"000016c8-3b8b-429c-96d1-1054a3b871cb\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Order Endpoints",
+      "item": [
+        {
+          "name": "Get All Orders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/orders?per_page=20&page=1&status=pending&sort_by=created_at&sort_order=desc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders"],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "20"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "status",
+                  "value": "pending"
+                },
+                {
+                  "key": "sort_by",
+                  "value": "created_at"
+                },
+                {
+                  "key": "sort_order",
+                  "value": "desc"
+                }
+              ]
+            },
+            "description": "Get a paginated list of orders with optional filtering"
+          }
+        },
+        {
+          "name": "Get Order by UUID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/orders/000016c8-3b8b-429c-96d1-1054a3b871cb",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", "000016c8-3b8b-429c-96d1-1054a3b871cb"]
+            },
+            "description": "Get a specific order by its UUID"
+          }
+        },
+        {
+          "name": "Get Order Events",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/orders/000016c8-3b8b-429c-96d1-1054a3b871cb/events?per_page=50&page=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", "000016c8-3b8b-429c-96d1-1054a3b871cb", "events"],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "50"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Get events for a specific order"
+          }
+        },
+        {
+          "name": "Get Random Pending Order",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/orders?status=pending&limit=1&random=true",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "pending"
+                },
+                {
+                  "key": "limit",
+                  "value": "1"
+                },
+                {
+                  "key": "random",
+                  "value": "true"
+                }
+              ]
+            },
+            "description": "Get a random pending order for testing"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Test Scenarios",
+      "item": [
+        {
+          "name": "✅ Successful Payment Webhook",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "User-Agent",
+                "value": "TestSuite/1.0"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"txn_id\": \"tx_success_{{timestamp}}\",\n  \"order_uuid\": \"{{test_order_uuid}}\",\n  \"status\": \"paid\",\n  \"amount\": {{randomAmount}},\n  \"timestamp\": \"{{currentTimestamp}}\",\n  \"webhook_source\": \"stripe\",\n  \"correlation_id\": \"test_{{timestamp}}\",\n  \"metadata\": {\n    \"payment_method\": \"credit_card\",\n    \"processor\": \"stripe\",\n    \"processor_txn_id\": \"pi_{{randomString}}\",\n    \"card_last4\": \"{{randomCard}}\",\n    \"card_brand\": \"visa\",\n    \"fee\": {{calculatedFee}},\n    \"currency\": \"USD\",\n    \"customer_id\": \"cust_{{randomString}}\",\n    \"billing_address\": {\n      \"country\": \"US\",\n      \"state\": \"CA\",\n      \"city\": \"San Francisco\",\n      \"postal_code\": \"94102\"\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/webhooks/payments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "webhooks", "payments"]
+            },
+            "description": "Test successful payment webhook processing with comprehensive metadata"
+          }
+        },
+        {
+          "name": "🔄 Refund Webhook",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"txn_id\": \"tx_refund_{{timestamp}}\",\n  \"order_uuid\": \"{{test_order_uuid}}\",\n  \"status\": \"refunded\",\n  \"amount\": {{randomAmount}},\n  \"timestamp\": \"{{currentTimestamp}}\",\n  \"webhook_source\": \"stripe\",\n  \"correlation_id\": \"refund_{{timestamp}}\",\n  \"metadata\": {\n    \"refund_reason\": \"customer_request\",\n    \"processor\": \"stripe\",\n    \"processor_refund_id\": \"re_{{randomString}}\",\n    \"original_txn_id\": \"{{test_txn_id}}\",\n    \"refund_amount\": {{randomAmount}},\n    \"currency\": \"USD\",\n    \"customer_id\": \"cust_{{randomString}}\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/webhooks/payments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "webhooks", "payments"]
+            },
+            "description": "Test refund webhook processing"
+          }
+        },
+        {
+          "name": "❌ Failed Payment Webhook",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"txn_id\": \"tx_failed_{{timestamp}}\",\n  \"order_uuid\": \"{{test_order_uuid}}\",\n  \"status\": \"failed\",\n  \"amount\": {{randomAmount}},\n  \"timestamp\": \"{{currentTimestamp}}\",\n  \"webhook_source\": \"stripe\",\n  \"correlation_id\": \"failed_{{timestamp}}\",\n  \"metadata\": {\n    \"failure_reason\": \"insufficient_funds\",\n    \"processor\": \"stripe\",\n    \"processor_txn_id\": \"pi_{{randomString}}\",\n    \"card_last4\": \"{{randomCard}}\",\n    \"card_brand\": \"visa\",\n    \"error_code\": \"card_declined\",\n    \"error_message\": \"Your card was declined.\",\n    \"currency\": \"USD\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/webhooks/payments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "webhooks", "payments"]
+            },
+            "description": "Test failed payment webhook processing"
+          }
+        },
+        {
+          "name": "🔄 Duplicate Transaction Test",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"txn_id\": \"tx_duplicate_test_{{timestamp}}\",\n  \"order_uuid\": \"{{test_order_uuid}}\",\n  \"status\": \"paid\",\n  \"amount\": {{randomAmount}},\n  \"timestamp\": \"{{currentTimestamp}}\",\n  \"webhook_source\": \"stripe\",\n  \"correlation_id\": \"duplicate_{{timestamp}}\",\n  \"metadata\": {\n    \"payment_method\": \"credit_card\",\n    \"processor\": \"stripe\",\n    \"processor_txn_id\": \"pi_duplicate_test\",\n    \"card_last4\": \"{{randomCard}}\",\n    \"card_brand\": \"visa\",\n    \"fee\": {{calculatedFee}},\n    \"currency\": \"USD\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/webhooks/payments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "webhooks", "payments"]
+            },
+            "description": "Test duplicate transaction handling - run this request twice to test idempotency"
+          }
+        },
+        {
+          "name": "🚫 Rate Limit Test",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"txn_id\": \"tx_rate_limit_{{timestamp}}\",\n  \"order_uuid\": \"{{test_order_uuid}}\",\n  \"status\": \"paid\",\n  \"amount\": {{randomAmount}},\n  \"timestamp\": \"{{currentTimestamp}}\",\n  \"webhook_source\": \"stripe\",\n  \"correlation_id\": \"rate_{{timestamp}}\",\n  \"metadata\": {\n    \"payment_method\": \"credit_card\",\n    \"processor\": \"stripe\",\n    \"processor_txn_id\": \"pi_rate_{{randomString}}\",\n    \"card_last4\": \"{{randomCard}}\",\n    \"card_brand\": \"visa\",\n    \"fee\": {{calculatedFee}},\n    \"currency\": \"USD\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/webhooks/payments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "webhooks", "payments"]
+            },
+            "description": "Test rate limiting - run this request multiple times quickly to test rate limiting"
+          }
+        },
+        {
+          "name": "❌ Invalid Order UUID",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"txn_id\": \"tx_invalid_order_{{timestamp}}\",\n  \"order_uuid\": \"00000000-0000-0000-0000-000000000000\",\n  \"status\": \"paid\",\n  \"amount\": 100.00,\n  \"timestamp\": \"{{currentTimestamp}}\",\n  \"webhook_source\": \"stripe\",\n  \"correlation_id\": \"invalid_{{timestamp}}\",\n  \"metadata\": {\n    \"payment_method\": \"credit_card\",\n    \"processor\": \"stripe\",\n    \"processor_txn_id\": \"pi_invalid_test\",\n    \"card_last4\": \"1234\",\n    \"card_brand\": \"visa\",\n    \"fee\": 3.20,\n    \"currency\": \"USD\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/webhooks/payments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "webhooks", "payments"]
+            },
+            "description": "Test webhook with non-existent order UUID"
+          }
+        },
+        {
+          "name": "❌ Invalid Status Transition",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"txn_id\": \"tx_invalid_transition_{{timestamp}}\",\n  \"order_uuid\": \"{{test_order_uuid}}\",\n  \"status\": \"paid\",\n  \"amount\": {{randomAmount}},\n  \"timestamp\": \"{{currentTimestamp}}\",\n  \"webhook_source\": \"stripe\",\n  \"correlation_id\": \"transition_{{timestamp}}\",\n  \"metadata\": {\n    \"payment_method\": \"credit_card\",\n    \"processor\": \"stripe\",\n    \"processor_txn_id\": \"pi_invalid_transition\",\n    \"card_last4\": \"{{randomCard}}\",\n    \"card_brand\": \"visa\",\n    \"fee\": {{calculatedFee}},\n    \"currency\": \"USD\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/webhooks/payments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "webhooks", "payments"]
+            },
+            "description": "Test invalid status transition (order already paid)"
+          }
+        },
+        {
+          "name": "❌ Malformed JSON",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"txn_id\": \"tx_malformed_{{timestamp}}\",\n  \"order_uuid\": \"{{test_order_uuid}}\",\n  \"status\": \"paid\",\n  \"amount\": {{randomAmount}},\n  \"timestamp\": \"{{currentTimestamp}}\",\n  \"webhook_source\": \"stripe\",\n  \"correlation_id\": \"malformed_{{timestamp}}\",\n  \"metadata\": {\n    \"payment_method\": \"credit_card\",\n    \"processor\": \"stripe\",\n    \"processor_txn_id\": \"pi_malformed\",\n    \"card_last4\": \"{{randomCard}}\",\n    \"card_brand\": \"visa\",\n    \"fee\": {{calculatedFee}},\n    \"currency\": \"USD\",\n    \"invalid_field\": \"missing_closing_quote\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/webhooks/payments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "webhooks", "payments"]
+            },
+            "description": "Test malformed JSON payload handling"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Performance Testing",
+      "item": [
+        {
+          "name": "🚀 Load Test - 10 Concurrent Webhooks",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"txn_id\": \"tx_load_{{timestamp}}_{{randomString}}\",\n  \"order_uuid\": \"{{test_order_uuid}}\",\n  \"status\": \"paid\",\n  \"amount\": {{randomAmount}},\n  \"timestamp\": \"{{currentTimestamp}}\",\n  \"webhook_source\": \"load_test\",\n  \"correlation_id\": \"load_{{timestamp}}\",\n  \"metadata\": {\n    \"payment_method\": \"credit_card\",\n    \"processor\": \"stripe\",\n    \"processor_txn_id\": \"pi_load_{{randomString}}\",\n    \"card_last4\": \"{{randomCard}}\",\n    \"card_brand\": \"visa\",\n    \"fee\": {{calculatedFee}},\n    \"currency\": \"USD\",\n    \"test_type\": \"load_test\",\n    \"concurrent_requests\": 10\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/webhooks/payments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "webhooks", "payments"]
+            },
+            "description": "Load test with concurrent webhook requests"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Monitoring & Analytics",
+      "item": [
+        {
+          "name": "📈 Webhook Logs Analysis",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/webhooks/logs?status=processed&per_page=50&page=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "webhooks", "logs"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "processed"
+                },
+                {
+                  "key": "per_page",
+                  "value": "50"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Analyze processed webhook logs for monitoring"
+          }
+        },
+        {
+          "name": "📊 Order Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/orders/stats",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", "stats"]
+            },
+            "description": "Get order processing statistics and metrics"
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Enhanced dynamic data generation for Order Management + Webhooks System",
+          "console.log('🚀 Generating dynamic test data...');",
+          "",
+          "// Generate timestamps and unique identifiers",
+          "const timestamp = Date.now();",
+          "const currentTimestamp = new Date().toISOString();",
+          "const randomString = Math.random().toString(36).substr(2, 20);",
+          "const randomCard = Math.floor(Math.random() * 9000) + 1000;",
+          "",
+          "// Set global variables",
+          "pm.globals.set('timestamp', timestamp);",
+          "pm.globals.set('currentTimestamp', currentTimestamp);",
+          "pm.globals.set('randomString', randomString);",
+          "pm.globals.set('randomCard', randomCard);",
+          "",
+          "// Generate unique transaction ID",
+          "const txnId = 'tx_' + timestamp + '_' + randomString.substr(0, 8);",
+          "pm.globals.set('test_txn_id', txnId);",
+          "",
+          "// Get random pending order for testing",
+          "pm.sendRequest({",
+          "    url: pm.environment.get('base_url') + '/api/orders?status=pending&limit=1&random=true',",
+          "    method: 'GET',",
+          "    header: {",
+          "        'Accept': 'application/json'",
+          "    }",
+          "}, function (err, response) {",
+          "    if (err) {",
+          "        console.log('❌ Error fetching random order:', err);",
+          "        // Fallback to default values",
+          "        pm.globals.set('test_order_uuid', '000016c8-3b8b-429c-96d1-1054a3b871cb');",
+          "        pm.globals.set('randomAmount', 299.99);",
+          "        pm.globals.set('calculatedFee', '8.70');",
+          "    } else if (response.json().data && response.json().data.length > 0) {",
+          "        const order = response.json().data[0];",
+          "        pm.globals.set('test_order_uuid', order.id);",
+          "        pm.globals.set('randomAmount', order.amount);",
+          "        // Calculate Stripe-like fee (2.9% + $0.30)",
+          "        const fee = (order.amount * 0.029 + 0.30).toFixed(2);",
+          "        pm.globals.set('calculatedFee', fee);",
+          "        console.log('✅ Random order selected:', order.id, 'Amount:', order.amount);",
+          "    } else {",
+          "        console.log('⚠️ No pending orders found, using default values');",
+          "        pm.globals.set('test_order_uuid', '000016c8-3b8b-429c-96d1-1054a3b871cb');",
+          "        pm.globals.set('randomAmount', 299.99);",
+          "        pm.globals.set('calculatedFee', '8.70');",
+          "    }",
+          "});",
+          "",
+          "console.log('📊 Test data generated:', {",
+          "    timestamp: timestamp,",
+          "    txnId: txnId,",
+          "    randomString: randomString,",
+          "    randomCard: randomCard",
+          "});"
+        ]
+      }
+    }
+  ]
+}
