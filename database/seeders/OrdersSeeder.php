@@ -33,8 +33,6 @@ class OrdersSeeder extends Seeder
         
         $statuses = ['pending', 'paid', 'failed', 'cancelled', 'refunded'];
         
-        $orders = [];
-        
         // Create 1000 orders with various configurations
         for ($i = 1; $i <= 1000; $i++) {
             $user = $users->random();
@@ -65,7 +63,7 @@ class OrdersSeeder extends Seeder
                 'user_id' => $user->id,
                 'amount' => $amount,
                 'status' => $status,
-                'external_txn_id' => $externalTxnId, // Always include this field
+                'external_txn_id' => $externalTxnId,
                 'metadata' => [
                     'product' => $product,
                     'currency' => $currency,
@@ -79,13 +77,8 @@ class OrdersSeeder extends Seeder
                 'updated_at' => $updatedAt,
             ];
 
-            $orders[] = $orderData;
-        }
-
-        // Insert orders in batches for better performance
-        $chunks = array_chunk($orders, 100);
-        foreach ($chunks as $chunk) {
-            Order::insert($chunk);
+            // Use create() instead of insert() to handle conditional fields properly
+            Order::create($orderData);
         }
 
         $this->command->info('Created 1000 test orders');
