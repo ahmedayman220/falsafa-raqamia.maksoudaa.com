@@ -11,15 +11,22 @@
             background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
             color: #d4d4d4;
             border-radius: 12px;
-            padding: 1.5rem;
+            padding: 1rem;
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
-            font-size: 14px;
+            font-size: 12px;
             line-height: 1.6;
             overflow-x: auto;
             border: 1px solid #3a3a3a;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
             position: relative;
             margin: 1rem 0;
+        }
+        
+        @media (min-width: 640px) {
+            .code-block {
+                padding: 1.5rem;
+                font-size: 14px;
+            }
         }
         
         .code-block::before {
@@ -148,11 +155,68 @@
             border-radius: 12px;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
+            height: auto;
         }
         
         video:hover {
             transform: translateY(-2px);
             box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.15), 0 20px 20px -5px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* Responsive video container */
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* Mobile responsive adjustments */
+        @media (max-width: 768px) {
+            .section-anchor {
+                scroll-margin-top: 80px;
+            }
+            
+            h1 {
+                font-size: 2rem !important;
+            }
+            
+            h2 {
+                font-size: 1.5rem !important;
+            }
+            
+            h3 {
+                font-size: 1.25rem !important;
+            }
+            
+            .text-4xl {
+                font-size: 2rem !important;
+            }
+            
+            .text-3xl {
+                font-size: 1.5rem !important;
+            }
+            
+            .text-2xl {
+                font-size: 1.25rem !important;
+            }
+            
+            .p-8 {
+                padding: 1rem !important;
+            }
+            
+            .mb-16 {
+                margin-bottom: 2rem !important;
+            }
+            
+            .mb-12 {
+                margin-bottom: 1.5rem !important;
+            }
+            
+            .mb-8 {
+                margin-bottom: 1rem !important;
+            }
         }
         
         /* Video container styling */
@@ -179,7 +243,7 @@
 </head>
 <body class="bg-gray-50">
     <!-- Navigation Sidebar -->
-    <nav class="fixed left-0 top-0 h-full w-64 bg-white shadow-lg overflow-y-auto z-10">
+    <nav class="fixed left-0 top-0 h-full w-64 bg-white shadow-lg overflow-y-auto z-10 lg:translate-x-0 -translate-x-full transition-transform duration-300" id="sidebar">
         <div class="p-6">
             <h2 class="text-xl font-bold text-gray-800 mb-6">📚 Documentation</h2>
             <ul class="space-y-2">
@@ -197,14 +261,24 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="ml-64 p-8">
+    <!-- Mobile Menu Button -->
+    <button class="fixed top-4 left-4 z-20 lg:hidden bg-white p-3 rounded-lg shadow-lg" id="menu-toggle">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+
+    <!-- Mobile Overlay -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 z-5 lg:hidden hidden" id="overlay"></div>
+
+    <main class="lg:ml-64 p-4 lg:p-8 pt-16 lg:pt-8">
         <div class="max-w-5xl mx-auto">
             
             <!-- 1. Greeting / Introduction -->
             <section id="greeting" class="section-anchor mb-16">
                 <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-8 rounded-lg shadow-lg">
-                    <h1 class="text-4xl font-bold mb-4">👋 Welcome to Order Management + Webhooks</h1>
-                    <p class="text-xl leading-relaxed">
+                    <h1 class="text-2xl md:text-4xl font-bold mb-4">👋 Welcome to Order Management + Webhooks</h1>
+                    <p class="text-lg md:text-xl leading-relaxed">
                         A robust, scalable PHP application designed to handle high-volume order processing with webhook integration. 
                         This system demonstrates enterprise-level patterns for handling webhooks, ensuring idempotency, managing concurrency, 
                         and maintaining comprehensive audit trails.
@@ -214,9 +288,9 @@
 
             <!-- 2. Demo & Resources -->
             <section id="demo" class="section-anchor mb-16">
-                <h2 class="text-3xl font-bold text-gray-800 mb-6">📹 Demo & Resources</h2>
+                <h2 class="text-xl md:text-3xl font-bold text-gray-800 mb-6">📹 Demo & Resources</h2>
                 <div class="bg-white p-6 rounded-lg shadow-md">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div class="text-center">
                             <div class="video-container">
                                 <h3 class="text-xl font-semibold text-red-800 mb-2">🎥 Discussion Video</h3>
@@ -288,7 +362,7 @@
 
             <!-- 3. Project Overview -->
             <section id="overview" class="section-anchor mb-16">
-                <h2 class="text-3xl font-bold text-gray-800 mb-6">📖 Project Overview</h2>
+                <h2 class="text-xl md:text-3xl font-bold text-gray-800 mb-6">📖 Project Overview</h2>
                 <div class="bg-white p-6 rounded-lg shadow-md">
                     <p class="text-lg text-gray-700 mb-4">
                         This PHP application provides a comprehensive order management system with webhook processing capabilities. 
@@ -1175,6 +1249,39 @@ php artisan key:generate</code></pre>
                     block.appendChild(copyBtn);
                 }
             });
+        });
+
+        // Mobile menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (menuToggle && sidebar && overlay) {
+                menuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('-translate-x-full');
+                    sidebar.classList.toggle('translate-x-0');
+                    overlay.classList.toggle('hidden');
+                });
+                
+                overlay.addEventListener('click', function() {
+                    sidebar.classList.add('-translate-x-full');
+                    sidebar.classList.remove('translate-x-0');
+                    overlay.classList.add('hidden');
+                });
+                
+                // Close sidebar when clicking on nav links (mobile)
+                const navLinks = document.querySelectorAll('.nav-link');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        if (window.innerWidth < 1024) {
+                            sidebar.classList.add('-translate-x-full');
+                            sidebar.classList.remove('translate-x-0');
+                            overlay.classList.add('hidden');
+                        }
+                    });
+                });
+            }
         });
     </script>
 </body>
