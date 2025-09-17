@@ -55,10 +55,17 @@ class OrdersSeeder extends Seeder
             $createdAt = now()->subDays(rand(1, 180))->subHours(rand(0, 23))->subMinutes(rand(0, 59));
             $updatedAt = $createdAt->copy()->addMinutes(rand(1, 60));
 
+            // Generate external transaction ID for some orders (simulating webhook processed orders)
+            $externalTxnId = null;
+            if (in_array($status, ['paid', 'refunded']) && rand(1, 3) === 1) {
+                $externalTxnId = 'TXN-' . strtoupper(uniqid());
+            }
+
             $orderData = [
                 'user_id' => $user->id,
                 'amount' => $amount,
                 'status' => $status,
+                'external_txn_id' => $externalTxnId, // Always include this field
                 'metadata' => [
                     'product' => $product,
                     'currency' => $currency,
@@ -71,11 +78,6 @@ class OrdersSeeder extends Seeder
                 'created_at' => $createdAt,
                 'updated_at' => $updatedAt,
             ];
-
-            // Add external transaction ID for some orders (simulating webhook processed orders)
-            if (in_array($status, ['paid', 'refunded']) && rand(1, 3) === 1) {
-                $orderData['external_txn_id'] = 'TXN-' . strtoupper(uniqid());
-            }
 
             $orders[] = $orderData;
         }
