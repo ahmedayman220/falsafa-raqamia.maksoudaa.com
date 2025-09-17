@@ -98,9 +98,18 @@ return new class extends Migration
         Schema::table('jobs', function (Blueprint $table) {
             // CRITICAL: Composite index for queue processing (queue + available_at)
             $table->index(['queue', 'available_at'], 'idx_jobs_queue_available');
-            
+        });
+
+        // CRITICAL: Add indexes to failed_jobs table for failed job analysis
+        Schema::table('failed_jobs', function (Blueprint $table) {
             // CRITICAL: Index for failed jobs analysis
-            $table->index('failed_at', 'idx_jobs_failed_at');
+            $table->index('failed_at', 'idx_failed_jobs_failed_at');
+            
+            // CRITICAL: Index for queue analysis
+            $table->index('queue', 'idx_failed_jobs_queue');
+            
+            // CRITICAL: Composite index for queue + failed_at analysis
+            $table->index(['queue', 'failed_at'], 'idx_failed_jobs_queue_failed');
         });
     }
 
@@ -152,7 +161,13 @@ return new class extends Migration
         // Drop indexes from jobs table
         Schema::table('jobs', function (Blueprint $table) {
             $table->dropIndex('idx_jobs_queue_available');
-            $table->dropIndex('idx_jobs_failed_at');
+        });
+
+        // Drop indexes from failed_jobs table
+        Schema::table('failed_jobs', function (Blueprint $table) {
+            $table->dropIndex('idx_failed_jobs_failed_at');
+            $table->dropIndex('idx_failed_jobs_queue');
+            $table->dropIndex('idx_failed_jobs_queue_failed');
         });
     }
 };
